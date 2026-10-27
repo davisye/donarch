@@ -247,6 +247,7 @@ description: Essential applications (terminal, file manager, shell)
 
 packages:
   - kitty
+  - foot
   - nemo
   - fish
   - fastfetch

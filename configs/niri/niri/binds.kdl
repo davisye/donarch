@@ -19,11 +19,12 @@ binds {
     // 建议的程序运行绑定：终端、应用启动器、锁屏程序。
 
     Mod+T hotkey-overlay-title="打开终端：kitty" { spawn "kitty"; }
-    Mod+Return hotkey-overlay-title="打开终端：kitty" { spawn "kitty"; }
+    Mod+Return hotkey-overlay-title="打开终端：foot" { spawn "footclient"; }
     Mod+F hotkey-overlay-title="打开文件管理器" { spawn "nemo"; }
     Mod+N hotkey-overlay-title="打开 QQ" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select(.app_id==\"QQ\") | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || exec linuxqq"; }
     Mod+M hotkey-overlay-title="打开微信" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select(.app_id==\"wechat\") | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || exec wechat"; }
-    Mod+D hotkey-overlay-title="打开 DeepSeek" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select((.app_id // \"\" | contains(\"hmjcdonmhijmnefklekckjkeoknbiipb\")) or ((.title // \"\") | ascii_downcase | contains(\"deepseek\"))) | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || gtk-launch chrome-hmjcdonmhijmnefklekckjkeoknbiipb-Default"; }
+    Mod+D hotkey-overlay-title="打开 Discord" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select((.app_id // \"\" | ascii_downcase)==\"discord\") | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || exec discord"; }
+    Mod+Slash hotkey-overlay-title="打开 KOOK" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select((.app_id // \"\") | contains(\"cgjebjkeibnangifkgdjalphpijafkao\")) | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || gtk-launch chrome-cgjebjkeibnangifkgdjalphpijafkao-Default"; }
     Mod+C hotkey-overlay-title="打开 ChatGPT" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select((.app_id // \"\" | contains(\"cadlkienfkclaiaibeoongdcgmdikeeg\")) or ((.title // \"\") | ascii_downcase | contains(\"chatgpt\"))) | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || gtk-launch chrome-cadlkienfkclaiaibeoongdcgmdikeeg-Default"; }
     Mod+Shift+D hotkey-overlay-title="打开豆包" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select((.app_id // \"\" | contains(\"nfjhphkhjelhenadmhihghlkccjdpdkk\")) or ((.title // \"\") | contains(\"豆包\"))) | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || gtk-launch chrome-nfjhphkhjelhenadmhihghlkccjdpdkk-Default"; }
     Mod+Shift+N hotkey-overlay-title="打开 Obsidian" { spawn "obsidian"; }
@@ -34,7 +35,7 @@ binds {
     Mod+Ctrl+C hotkey-overlay-title="打开 Codex-cli" { spawn "kitty" "codex"; }
     Mod+Ctrl+Return { spawn "kitty" "--class=floating-kitty"; }
     Mod+Shift+O hotkey-overlay-title="打开 OBS Studio" { spawn "flatpak" "run" "com.obsproject.Studio"; }
-    Super+Alt+L hotkey-overlay-title="锁屏：swaylock" { spawn "swaylock" "--color" "000000"; }
+    Super+Alt+L hotkey-overlay-title="锁屏：Noctalia" { spawn "noctalia" "msg" "session" "lock"; }
     Mod+Comma hotkey-overlay-title="打开飞书" { spawn-sh "id=$(niri msg -j windows | jq -r '.[] | select((.app_id // \"\" | contains(\"feishu\")) or ((.title // \"\") | ascii_downcase | contains(\"feishu\")) or ((.title // \"\") | contains(\"飞书\"))) | .id' | head -n1); [ -n \"$id\" ] && niri msg action focus-window --id \"$id\" || exec feishu"; }
 
     // 使用 spawn-sh 来运行一个 shell 命令。当你需要使用管道、多个命令等时请使用它。
@@ -42,14 +43,12 @@ binds {
     // 例如，这是一个切换屏幕阅读器（orca）的标准绑定。
     Super+Alt+S allow-when-locked=true hotkey-overlay-title=null { spawn-sh "pkill orca || exec orca"; }
 
-    // 以下为 PipeWire 与 WirePlumber 的示例音量键映射。
+    // 交给 Noctalia 控制音量并显示 OSD。
     // 属性 allow-when-locked=true 使其在会话锁定时仍然可用。
-    // 使用 spawn-sh 可以在命令中传入多个参数。
-    // "-l 1.0" 将音量限制为 100%。
-    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-"; }
-    XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-up" "10"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia" "msg" "volume-down" "10"; }
+    XF86AudioMute        allow-when-locked=true { spawn "noctalia" "msg" "volume-mute"; }
+    XF86AudioMicMute     allow-when-locked=true { spawn "noctalia" "msg" "mic-mute"; }
 
     // 使用 playerctl 的示例媒体键映射。
     // 这将与任何支持 MPRIS 的媒体播放器配合工作。
@@ -58,11 +57,9 @@ binds {
     XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
     XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
 
-    // 使用 brightnessctl 的示例亮度键映射。
-    // 你也可以使用普通的 spawn 并传入多个参数（以避免通过 "sh"），
-    // 但需要手动将每个参数用单独的 "" 引号包裹。
-    XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
+    // 交给 Noctalia 控制亮度并显示 OSD。
+    XF86MonBrightnessUp allow-when-locked=true { spawn "noctalia" "msg" "brightness-up" "10"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia" "msg" "brightness-down" "10"; }
 
     // 打开/关闭概览：工作区和窗口的缩略视图。
     // 你也可以将鼠标移动到左上角热区，或在触控板上四指向上滑动。
@@ -81,10 +78,12 @@ binds {
 
     Mod+Shift+Left  hotkey-overlay-title="左移列" { move-column-left; }
     Mod+Shift+Right hotkey-overlay-title="右移列" { move-column-right; }
-    Mod+Ctrl+H     hotkey-overlay-title="左移列" { move-column-left; }
+    Mod+Shift+H     hotkey-overlay-title="聚焦左侧显示器" { focus-monitor-left; }
+    Mod+Shift+L     hotkey-overlay-title="聚焦右侧显示器" { focus-monitor-right; }
+    Mod+Ctrl+H     hotkey-overlay-title="将焦点窗口移到左侧显示器" { move-window-to-monitor-left; }
     Mod+Ctrl+J     hotkey-overlay-title="将窗口移到下方工作区" { move-window-to-workspace-down; }
     Mod+Ctrl+K     hotkey-overlay-title="将窗口移到上方工作区" { move-window-to-workspace-up; }
-    Mod+Ctrl+L     hotkey-overlay-title="右移列" { move-column-right; }
+    Mod+Ctrl+L     hotkey-overlay-title="将焦点窗口移到右侧显示器" { move-window-to-monitor-right; }
 
     // 当列中到达第一个或最后一个窗口时，可使用跨工作区移动的替代命令。
     // Mod+J     { focus-window-or-workspace-down; }
@@ -101,10 +100,8 @@ binds {
     Mod+Shift+Down  { focus-monitor-down; }
     Mod+Shift+Up    { focus-monitor-up; }
     Mod+Ctrl+Right { focus-monitor-right; }
-    Mod+Shift+H     { focus-monitor-left; }
     Mod+Shift+J     { focus-monitor-down; }
     Mod+Shift+K     { focus-monitor-up; }
-    Mod+Shift+L     { focus-monitor-right; }
 
     Mod+Shift+Ctrl+Left  { move-workspace-to-monitor-left; }
     Mod+Shift+Ctrl+Down  { move-workspace-down; }

@@ -1,10 +1,10 @@
-// Shell Switcher - Keybindings
-// This file is managed by shell-switch - manual edits will be overwritten
-// Current shell: Noctalia Shell
+// Noctalia v5 keybindings.
+// The former shell-switch manager may overwrite this file.
+// Current shell: Noctalia v5
 
 binds {
     // Application launcher
     Mod+Space hotkey-overlay-title="启动器" {
-        spawn "qs" "-c" "noctalia-shell" "ipc" "call" "launcher" "toggle"
+        spawn "noctalia" "msg" "panel-toggle" "launcher"
     }
 }

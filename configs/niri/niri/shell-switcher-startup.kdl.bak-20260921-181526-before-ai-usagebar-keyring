@@ -1,0 +1,5 @@
+// Noctalia v5 startup configuration.
+// The former shell-switch manager may overwrite this file.
+// Current shell: Noctalia v5
+
+spawn-at-startup "noctalia"

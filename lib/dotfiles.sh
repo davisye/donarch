@@ -47,6 +47,7 @@ deploy_shared_configs() {
 
     local shared_configs=(
         "kitty"
+        "foot"
         "fish"
         "gtk-3.0"
         "gtk-4.0"
